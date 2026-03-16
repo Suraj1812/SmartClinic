@@ -1,0 +1,148 @@
+<odoo>
+    <record id="smart_clinic_appointment_tree_view" model="ir.ui.view">
+        <field name="name">smart.clinic.appointment.tree</field>
+        <field name="model">smart_clinic.appointment</field>
+        <field name="arch" type="xml">
+            <tree string="Appointments">
+                <field name="name"/>
+                <field name="tracking_code"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="doctor_specialization"/>
+                <field name="appointment_datetime"/>
+                <field name="duration_minutes"/>
+                <field name="status"/>
+                <field name="booking_source"/>
+                <field name="company_id" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="smart_clinic_appointment_form_view" model="ir.ui.view">
+        <field name="name">smart.clinic.appointment.form</field>
+        <field name="model">smart_clinic.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Appointment">
+                <header>
+                    <button
+                        name="action_confirm"
+                        string="Confirm"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="status != 'pending'"
+                    />
+                    <button
+                        name="action_complete"
+                        string="Mark Completed"
+                        type="object"
+                        invisible="status != 'confirmed'"
+                    />
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        type="object"
+                        invisible="status in ('cancelled', 'completed')"
+                    />
+                    <button
+                        name="action_reset_pending"
+                        string="Reset to Pending"
+                        type="object"
+                        invisible="status == 'pending'"
+                    />
+                    <field
+                        name="status"
+                        widget="statusbar"
+                        statusbar_visible="pending,confirmed,completed,cancelled"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="tracking_code" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="patient_id"/>
+                            <field name="doctor_id"/>
+                        </group>
+                        <group>
+                            <field name="appointment_datetime"/>
+                            <field name="duration_minutes"/>
+                            <field name="appointment_end" readonly="1"/>
+                            <field name="booking_source" readonly="1"/>
+                            <field name="patient_phone" readonly="1"/>
+                            <field name="patient_email" readonly="1"/>
+                            <field name="doctor_specialization" readonly="1"/>
+                        </group>
+                    </group>
+                    <group groups="base.group_multi_company">
+                        <field name="company_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Appointment notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="smart_clinic_appointment_search_view" model="ir.ui.view">
+        <field name="name">smart.clinic.appointment.search</field>
+        <field name="model">smart_clinic.appointment</field>
+        <field name="arch" type="xml">
+            <search string="Appointments">
+                <field name="name"/>
+                <field name="tracking_code"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <filter name="pending" string="Pending" domain="[('status', '=', 'pending')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('status', '=', 'confirmed')]"/>
+                <filter name="completed" string="Completed" domain="[('status', '=', 'completed')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('status', '=', 'cancelled')]"/>
+                <filter
+                    name="website_bookings"
+                    string="Website Bookings"
+                    domain="[('booking_source', '=', 'website')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter name="group_doctor" string="Doctor" context="{'group_by': 'doctor_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter
+                        name="group_date"
+                        string="Appointment Date"
+                        context="{'group_by': 'appointment_datetime:day'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="smart_clinic_appointment_calendar_view" model="ir.ui.view">
+        <field name="name">smart.clinic.appointment.calendar</field>
+        <field name="model">smart_clinic.appointment</field>
+        <field name="arch" type="xml">
+            <calendar
+                string="Appointments"
+                date_start="appointment_datetime"
+                date_stop="appointment_end"
+                color="doctor_id"
+            >
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="status"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="smart_clinic_appointment_action" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">smart_clinic.appointment</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="smart_clinic_appointment_search_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create and track clinic appointments from here.
+            </p>
+        </field>
+    </record>
+</odoo>

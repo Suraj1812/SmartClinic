@@ -1,0 +1,30 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python files
+        run: python -m compileall smart_clinic
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Validate XML files
+        run: xmllint --noout smart_clinic/data/sequence.xml smart_clinic/security/security.xml smart_clinic/views/appointment_views.xml smart_clinic/views/doctor_views.xml smart_clinic/views/menu_views.xml smart_clinic/views/patient_views.xml smart_clinic/views/website_templates.xml

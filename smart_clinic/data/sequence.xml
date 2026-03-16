@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+    <record id="seq_smart_clinic_appointment" model="ir.sequence">
+        <field name="name">Smart Clinic Appointment</field>
+        <field name="code">smart_clinic.appointment</field>
+        <field name="prefix">APT/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

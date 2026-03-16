@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_smart_clinic_patient_user,smart_clinic.patient.user,model_smart_clinic_patient,smart_clinic.group_smart_clinic_user,1,1,1,0
+access_smart_clinic_doctor_user,smart_clinic.doctor.user,model_smart_clinic_doctor,smart_clinic.group_smart_clinic_user,1,1,1,0
+access_smart_clinic_appointment_user,smart_clinic.appointment.user,model_smart_clinic_appointment,smart_clinic.group_smart_clinic_user,1,1,1,0
+access_smart_clinic_patient_manager,smart_clinic.patient.manager,model_smart_clinic_patient,smart_clinic.group_smart_clinic_manager,1,1,1,1
+access_smart_clinic_doctor_manager,smart_clinic.doctor.manager,model_smart_clinic_doctor,smart_clinic.group_smart_clinic_manager,1,1,1,1
+access_smart_clinic_appointment_manager,smart_clinic.appointment.manager,model_smart_clinic_appointment,smart_clinic.group_smart_clinic_manager,1,1,1,1

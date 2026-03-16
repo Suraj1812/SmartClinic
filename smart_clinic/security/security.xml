@@ -1,0 +1,43 @@
+<odoo>
+    <record id="module_category_smart_clinic" model="ir.module.category">
+        <field name="name">Smart Clinic</field>
+        <field name="description">Access groups for Smart Clinic users.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="group_smart_clinic_user" model="res.groups">
+        <field name="name">Smart Clinic User</field>
+        <field name="category_id" ref="smart_clinic.module_category_smart_clinic"/>
+    </record>
+
+    <record id="group_smart_clinic_manager" model="res.groups">
+        <field name="name">Smart Clinic Manager</field>
+        <field name="category_id" ref="smart_clinic.module_category_smart_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('smart_clinic.group_smart_clinic_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('smart_clinic.group_smart_clinic_manager'))]"/>
+    </record>
+
+    <record id="smart_clinic_patient_company_rule" model="ir.rule">
+        <field name="name">Patient company access</field>
+        <field name="model_id" ref="model_smart_clinic_patient"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('smart_clinic.group_smart_clinic_user'))]"/>
+    </record>
+
+    <record id="smart_clinic_doctor_company_rule" model="ir.rule">
+        <field name="name">Doctor company access</field>
+        <field name="model_id" ref="model_smart_clinic_doctor"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('smart_clinic.group_smart_clinic_user'))]"/>
+    </record>
+
+    <record id="smart_clinic_appointment_company_rule" model="ir.rule">
+        <field name="name">Appointment company access</field>
+        <field name="model_id" ref="model_smart_clinic_appointment"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('smart_clinic.group_smart_clinic_user'))]"/>
+    </record>
+</odoo>

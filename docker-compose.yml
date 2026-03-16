@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:15
+    container_name: smartclinic-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  odoo:
+    image: odoo:17.0
+    container_name: smartclinic-odoo
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - /usr/local/bin/odoo-entrypoint.sh
+    environment:
+      HOST: db
+      ODOO_MASTER_PASSWORD: ${ODOO_MASTER_PASSWORD:-change-this-master-password}
+      ODOO_DB: ${ODOO_DB:-smartclinic}
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    ports:
+      - ${ODOO_PORT:-8069}:8069
+    restart: unless-stopped
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./smart_clinic:/mnt/extra-addons/smart_clinic
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      - ./docker/odoo-entrypoint.sh:/usr/local/bin/odoo-entrypoint.sh:ro
+
+volumes:
+  db_data:
+  odoo_data:

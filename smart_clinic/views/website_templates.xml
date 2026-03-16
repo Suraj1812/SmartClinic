@@ -1,0 +1,619 @@
+<odoo>
+    <template id="smart_clinic_homepage" name="Smart Clinic Home">
+        <t t-call="website.layout">
+            <div id="wrap" class="smart-clinic-page">
+                <section class="sc-hero">
+                    <div class="container">
+                        <div class="sc-hero-shell">
+                            <div class="sc-hero-copy">
+                                <div class="sc-kicker"><t t-esc="company_name or 'Smart Clinic'"/></div>
+                                <h1>Find a doctor. Book fast. Stay updated.</h1>
+                                <p class="sc-lead">A quieter, cleaner booking flow for everyday clinic visits.</p>
+                                <div class="sc-chip-row">
+                                    <span class="sc-chip">Online appointments</span>
+                                    <span class="sc-chip">Verified status lookup</span>
+                                    <span class="sc-chip">Clinic-managed schedules</span>
+                                    <t t-foreach="featured_specialties" t-as="specialty">
+                                        <span class="sc-chip sc-chip-soft"><t t-esc="specialty"/></span>
+                                    </t>
+                                </div>
+                                <div class="sc-actions">
+                                    <a href="/smart-clinic/book" class="sc-btn sc-btn-primary">Book Appointment</a>
+                                    <a href="/smart-clinic/doctors" class="sc-btn sc-btn-secondary">Browse Doctors</a>
+                                </div>
+                                <div class="sc-quick-strip">
+                                    <div class="sc-quick-tile">
+                                        <strong><t t-esc="available_doctor_count"/></strong>
+                                        <span>Doctors available</span>
+                                    </div>
+                                    <div class="sc-quick-tile">
+                                        <strong><t t-esc="patient_count"/></strong>
+                                        <span>Patients managed</span>
+                                    </div>
+                                    <div class="sc-quick-tile">
+                                        <strong><t t-esc="appointment_count"/></strong>
+                                        <span>Appointments tracked</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sc-hero-visual">
+                                <div class="sc-hero-orb sc-hero-orb-a"/>
+                                <div class="sc-hero-orb sc-hero-orb-b"/>
+                                <div class="sc-hero-card sc-glass-card sc-float-card sc-stage-card-main">
+                                    <div class="sc-card-label">Today at the clinic</div>
+                                    <h2>Open the front door before the phone rings.</h2>
+                                    <div class="sc-hero-grid sc-hero-grid-compact">
+                                        <div>
+                                            <strong><t t-esc="doctor_count"/></strong>
+                                            <span>Doctors</span>
+                                        </div>
+                                        <div>
+                                            <strong><t t-esc="available_doctor_count"/></strong>
+                                            <span>Open for booking</span>
+                                        </div>
+                                        <div>
+                                            <strong>Status</strong>
+                                            <span>Track with code + phone</span>
+                                        </div>
+                                        <div>
+                                            <strong>Fast</strong>
+                                            <span>One clear request form</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sc-hero-card sc-schedule-card sc-stage-card-accent">
+                                    <div class="sc-card-label">Care areas</div>
+                                    <div class="sc-tag-stack">
+                                        <t t-if="featured_specialties">
+                                            <t t-foreach="featured_specialties" t-as="specialty">
+                                                <span class="sc-chip sc-chip-soft"><t t-esc="specialty"/></span>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="sc-chip sc-chip-soft">General Consultation</span>
+                                            <span class="sc-chip sc-chip-soft">Follow-up Visits</span>
+                                            <span class="sc-chip sc-chip-soft">Specialist Care</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sc-section sc-section-tight">
+                    <div class="container">
+                        <div class="sc-service-grid">
+                            <article class="sc-service-card">
+                                <div class="sc-service-brow">01</div>
+                                <h3>Book online</h3>
+                                <p>Choose a doctor and send a request in one step.</p>
+                            </article>
+                            <article class="sc-service-card">
+                                <div class="sc-service-brow">02</div>
+                                <h3>Private status check</h3>
+                                <p>Use the booking code and phone number to verify updates.</p>
+                            </article>
+                            <article class="sc-service-card">
+                                <div class="sc-service-brow">03</div>
+                                <h3>Specialist directory</h3>
+                                <p>Profiles stay in sync with your clinic records.</p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sc-section">
+                    <div class="container">
+                        <div class="sc-section-head">
+                            <div>
+                                <div class="sc-kicker">Doctors</div>
+                                <h2>Meet the specialists patients can book online.</h2>
+                            </div>
+                            <a href="/smart-clinic/doctors" class="sc-btn sc-btn-secondary">Explore All Doctors</a>
+                        </div>
+
+                        <t t-if="doctors">
+                            <div class="sc-doctor-grid">
+                                <t t-foreach="doctors" t-as="doctor">
+                                    <article class="sc-doctor-card">
+                                        <div class="sc-card-image sc-card-image-tall">
+                                            <t t-if="doctor.image_1920">
+                                                <img t-att-src="image_data_uri(doctor.image_1920)" t-att-alt="doctor.name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span><t t-esc="doctor.name[:1]"/></span>
+                                            </t>
+                                        </div>
+                                        <div class="sc-card-body">
+                                            <div class="sc-card-topline">
+                                                <span class="sc-pill"><t t-esc="doctor.specialization"/></span>
+                                                <span t-if="doctor.is_available" class="sc-availability is-live">Available</span>
+                                                <span t-else="" class="sc-availability">Offline</span>
+                                            </div>
+                                            <h3><t t-esc="doctor.name"/></h3>
+                                            <p class="sc-copy-compact">
+                                                <t t-esc="doctor.bio or 'Professional profile managed from the Smart Clinic admin dashboard.'"/>
+                                            </p>
+                                            <div class="sc-card-meta">
+                                                <span><strong>Consultation:</strong> <t t-esc="doctor.consultation_duration"/> min</span>
+                                                <span><strong>Schedule:</strong> <t t-esc="doctor.availability_note or 'Mon - Sat by appointment'"/></span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="sc-empty-state">
+                                <h3>No published doctors yet.</h3>
+                                <p>Add doctor profiles in the backend and mark them visible on the website to populate this section.</p>
+                            </div>
+                        </t>
+                    </div>
+                </section>
+
+                <section class="sc-section">
+                    <div class="container">
+                        <div class="sc-cta-band sc-cta-band-light">
+                            <div>
+                                <div class="sc-kicker">Need the next step?</div>
+                                <h3>Book a visit or check an existing appointment.</h3>
+                            </div>
+                            <div class="sc-actions">
+                                <a href="/smart-clinic/book" class="sc-btn sc-btn-primary">Book Now</a>
+                                <a href="/smart-clinic/status" class="sc-btn sc-btn-secondary">Check Status</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="smart_clinic_doctors_page" name="Smart Clinic Doctors">
+        <t t-call="website.layout">
+            <div id="wrap" class="smart-clinic-page">
+                <section class="sc-page-hero">
+                    <div class="container">
+                        <div class="sc-page-hero-shell">
+                            <div>
+                                <div class="sc-kicker">Doctors</div>
+                                <h1>Choose by specialty, then book.</h1>
+                                <p class="sc-lead">Published profiles update directly from your clinic records.</p>
+                                <div class="sc-chip-row">
+                                    <span class="sc-chip"><t t-esc="doctor_count"/> doctors published</span>
+                                    <span class="sc-chip"><t t-esc="available_doctor_count"/> currently available</span>
+                                    <t t-foreach="(specialties or [])[:5]" t-as="specialty">
+                                        <span class="sc-chip sc-chip-soft"><t t-esc="specialty"/></span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="sc-page-sidecard">
+                                <div class="sc-card-label">Quick route</div>
+                                <h3>Already know who to see?</h3>
+                                <p>Go straight to the booking form and submit your preferred time.</p>
+                                <a href="/smart-clinic/book" class="sc-btn sc-btn-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sc-section">
+                    <div class="container">
+                        <t t-if="doctors">
+                            <div class="sc-doctor-grid">
+                                <t t-foreach="doctors" t-as="doctor">
+                                    <article class="sc-doctor-card">
+                                        <div class="sc-card-image sc-card-image-tall">
+                                            <t t-if="doctor.image_1920">
+                                                <img t-att-src="image_data_uri(doctor.image_1920)" t-att-alt="doctor.name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span><t t-esc="doctor.name[:1]"/></span>
+                                            </t>
+                                        </div>
+                                        <div class="sc-card-body">
+                                            <div class="sc-card-topline">
+                                                <span class="sc-pill"><t t-esc="doctor.specialization"/></span>
+                                                <span t-if="doctor.is_available" class="sc-availability is-live">Online booking on</span>
+                                                <span t-else="" class="sc-availability">Currently unavailable</span>
+                                            </div>
+                                            <h3><t t-esc="doctor.name"/></h3>
+                                            <p class="sc-copy-compact"><t t-esc="doctor.bio or 'Consultation details managed from the clinic dashboard.'"/></p>
+                                            <div class="sc-card-meta sc-card-meta-stack">
+                                                <span><strong>Consultation:</strong> <t t-esc="doctor.consultation_duration"/> min</span>
+                                                <span><strong>Schedule:</strong> <t t-esc="doctor.availability_note or 'Shared by clinic staff'"/></span>
+                                                <span t-if="doctor.phone"><strong>Phone:</strong> <t t-esc="doctor.phone"/></span>
+                                                <span t-if="doctor.email"><strong>Email:</strong> <t t-esc="doctor.email"/></span>
+                                            </div>
+                                            <div class="sc-actions sc-actions-tight">
+                                                <a href="/smart-clinic/book" class="sc-btn sc-btn-primary">Book with This Doctor</a>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="sc-empty-state">
+                                <h3>No doctors are published yet.</h3>
+                                <p>Publish doctor profiles in the backend to turn this page into a live specialist directory.</p>
+                            </div>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="smart_clinic_book_page" name="Smart Clinic Book Appointment">
+        <t t-call="website.layout">
+            <div id="wrap" class="smart-clinic-page">
+                <section class="sc-page-hero">
+                    <div class="container">
+                        <div class="sc-page-hero-shell">
+                            <div>
+                                <div class="sc-kicker">Book Appointment</div>
+                                <h1>Request a visit in a minute.</h1>
+                                <p class="sc-lead">Pick a doctor, share your details, and send a preferred date and time.</p>
+                                <div class="sc-chip-row">
+                                    <span class="sc-chip"><t t-esc="doctor_count"/> doctors visible</span>
+                                    <t t-foreach="(specialties or [])[:4]" t-as="specialty">
+                                        <span class="sc-chip sc-chip-soft"><t t-esc="specialty"/></span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="sc-page-sidecard">
+                                <div class="sc-card-label">After submission</div>
+                                <h3>Your request lands with the clinic team.</h3>
+                                <p>You will get a tracking code, and the appointment stays pending until staff confirms it.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sc-section">
+                    <div class="container">
+                        <div class="sc-form-layout sc-form-layout-wide">
+                            <div class="sc-form-card">
+                                <div class="sc-kicker">Secure Request Form</div>
+                                <h2>Book an appointment.</h2>
+                                <p>All requests go directly into the clinic dashboard.</p>
+
+                                <t t-if="error">
+                                    <div class="sc-alert sc-alert-danger">
+                                        <t t-esc="error"/>
+                                    </div>
+                                </t>
+
+                                <form action="/smart-clinic/book/submit" method="post">
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        t-att-value="request.csrf_token()"
+                                    />
+
+                                    <div class="sc-form-grid">
+                                        <div class="sc-field-group">
+                                            <label for="patient_name">Patient Name</label>
+                                            <input
+                                                id="patient_name"
+                                                type="text"
+                                                name="patient_name"
+                                                required="required"
+                                                t-att-value="form_data.get('patient_name', '')"
+                                            />
+                                        </div>
+
+                                        <div class="sc-field-group">
+                                            <label for="phone">Phone Number</label>
+                                            <input
+                                                id="phone"
+                                                type="tel"
+                                                name="phone"
+                                                required="required"
+                                                t-att-value="form_data.get('phone', '')"
+                                            />
+                                        </div>
+
+                                        <div class="sc-field-group">
+                                            <label for="email">Email Address</label>
+                                            <input
+                                                id="email"
+                                                type="email"
+                                                name="email"
+                                                t-att-value="form_data.get('email', '')"
+                                            />
+                                        </div>
+
+                                        <div class="sc-field-group">
+                                            <label for="gender">Gender</label>
+                                            <select id="gender" name="gender">
+                                                <option value="">Select gender</option>
+                                                <option
+                                                    value="male"
+                                                    t-att-selected="'selected' if form_data.get('gender') == 'male' else None"
+                                                >
+                                                    Male
+                                                </option>
+                                                <option
+                                                    value="female"
+                                                    t-att-selected="'selected' if form_data.get('gender') == 'female' else None"
+                                                >
+                                                    Female
+                                                </option>
+                                                <option
+                                                    value="other"
+                                                    t-att-selected="'selected' if form_data.get('gender') == 'other' else None"
+                                                >
+                                                    Other
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sc-field-group">
+                                            <label for="doctor_id">Doctor</label>
+                                            <select id="doctor_id" name="doctor_id" required="required">
+                                                <option value="">Choose a doctor</option>
+                                                <t t-foreach="doctors" t-as="doctor">
+                                                    <option
+                                                        t-att-value="doctor.id"
+                                                        t-att-selected="'selected' if form_data.get('doctor_id', '') == ('%s' % doctor.id) else None"
+                                                    >
+                                                        <t t-esc="doctor.name"/> - <t t-esc="doctor.specialization"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="sc-field-group">
+                                            <label for="appointment_datetime">Preferred Date and Time</label>
+                                            <input
+                                                id="appointment_datetime"
+                                                type="datetime-local"
+                                                name="appointment_datetime"
+                                                required="required"
+                                                t-att-value="form_data.get('appointment_datetime', '')"
+                                            />
+                                        </div>
+
+                                        <div class="sc-field-group sc-field-group-full">
+                                            <label for="notes">Symptoms or Notes</label>
+                                            <textarea id="notes" name="notes" placeholder="Optional symptoms, follow-up details, or requests"><t t-esc="form_data.get('notes', '')"/></textarea>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="sc-btn sc-btn-primary">
+                                        Submit Appointment Request
+                                    </button>
+                                </form>
+                            </div>
+
+                            <aside class="sc-sidebar-stack">
+                                <div class="sc-side-panel">
+                                    <div class="sc-card-label">What happens next</div>
+                                    <div class="sc-steps">
+                                        <div class="sc-step-item">
+                                            <span>1</span>
+                                            <div>
+                                                <strong>Profile checked</strong>
+                                                <p>We match the patient or create a new record.</p>
+                                            </div>
+                                        </div>
+                                        <div class="sc-step-item">
+                                            <span>2</span>
+                                            <div>
+                                                <strong>Request logged</strong>
+                                                <p>The visit is saved with a tracking code.</p>
+                                            </div>
+                                        </div>
+                                        <div class="sc-step-item">
+                                            <span>3</span>
+                                            <div>
+                                                <strong>Clinic confirms</strong>
+                                                <p>Staff reviews the slot and updates the status.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sc-side-panel">
+                                    <div class="sc-card-label">Published Doctors</div>
+                                    <t t-if="doctors">
+                                        <div class="sc-doctor-mini-list">
+                                            <t t-foreach="doctors[:4]" t-as="doctor">
+                                                <div class="sc-doctor-mini">
+                                                    <strong><t t-esc="doctor.name"/></strong>
+                                                    <span><t t-esc="doctor.specialization"/> · <t t-esc="doctor.consultation_duration"/> min</span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <p>No doctors are published yet. Add and publish doctor records from the backend.</p>
+                                    </t>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="smart_clinic_status_page" name="Smart Clinic Appointment Status">
+        <t t-call="website.layout">
+            <div id="wrap" class="smart-clinic-page">
+                <section class="sc-page-hero">
+                    <div class="container">
+                        <div class="sc-page-hero-shell">
+                            <div>
+                                <div class="sc-kicker">Track Appointment</div>
+                                <h1>Check your appointment status.</h1>
+                                <p class="sc-lead">Use the booking code and phone number used during the request.</p>
+                            </div>
+                            <div class="sc-page-sidecard">
+                                <div class="sc-card-label">Verification</div>
+                                <h3>Private by default.</h3>
+                                <p>We only show appointment details when both values match.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sc-section">
+                    <div class="container">
+                        <div class="sc-status-layout sc-form-layout-wide">
+                            <div class="sc-form-card">
+                                <div class="sc-kicker">Lookup</div>
+                                <h2>Track a booking.</h2>
+                                <p>Enter the exact tracking code and phone number.</p>
+
+                                <t t-if="booked and tracking_code">
+                                    <div class="sc-alert sc-alert-success">
+                                        Appointment submitted successfully. Your tracking code is
+                                        <strong><t t-esc="tracking_code"/></strong>.
+                                    </div>
+                                </t>
+                                <t t-if="error">
+                                    <div class="sc-alert sc-alert-danger">
+                                        <t t-esc="error"/>
+                                    </div>
+                                </t>
+
+                                <form action="/smart-clinic/status" method="get">
+                                    <div class="sc-form-grid">
+                                        <div class="sc-field-group">
+                                            <label for="tracking_code">Tracking Code</label>
+                                            <input
+                                                id="tracking_code"
+                                                type="text"
+                                                name="tracking_code"
+                                                placeholder="Enter tracking code"
+                                                t-att-value="tracking_code"
+                                            />
+                                        </div>
+                                        <div class="sc-field-group">
+                                            <label for="phone">Patient Phone Number</label>
+                                            <input
+                                                id="phone"
+                                                type="tel"
+                                                name="phone"
+                                                placeholder="Enter phone number"
+                                                t-att-value="phone"
+                                            />
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="sc-btn sc-btn-primary">
+                                        Check Status
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="sc-status-card">
+                                <t t-if="appointment and (verified or booked)">
+                                    <div class="sc-kicker">Verified Result</div>
+                                    <h2><t t-esc="appointment.name"/></h2>
+                                    <div t-att-class="'sc-status-pill %s' % appointment.status">
+                                        <t t-esc="appointment.status.capitalize()"/>
+                                    </div>
+                                    <div class="sc-status-track">
+                                        <div t-attf-class="sc-track-step #{'is-active' if appointment.status == 'pending' else 'is-done'}">
+                                            Pending
+                                        </div>
+                                        <div t-attf-class="sc-track-step #{'is-active' if appointment.status == 'confirmed' else ('is-done' if appointment.status == 'completed' else '')}">
+                                            Confirmed
+                                        </div>
+                                        <div t-attf-class="sc-track-step #{'is-active' if appointment.status == 'completed' else ''}">
+                                            Completed
+                                        </div>
+                                    </div>
+                                    <div class="sc-detail-list">
+                                        <div class="sc-detail-row">
+                                            <strong>Patient</strong>
+                                            <span><t t-esc="appointment.patient_id.name"/></span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Doctor</strong>
+                                            <span><t t-esc="appointment.doctor_id.name"/></span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Specialization</strong>
+                                            <span><t t-esc="appointment.doctor_specialization"/></span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Appointment Time</strong>
+                                            <span t-field="appointment.appointment_datetime"/>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Tracking Code</strong>
+                                            <span><t t-esc="appointment.tracking_code"/></span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Source</strong>
+                                            <span><t t-esc="appointment.booking_source.capitalize()"/></span>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="searched">
+                                    <div class="sc-kicker">No Match</div>
+                                    <h2>We could not verify that appointment.</h2>
+                                    <p>Please recheck the tracking code and the patient phone number used during booking.</p>
+                                </t>
+                                <t t-else="">
+                                    <div class="sc-kicker">Before you search</div>
+                                    <h2>Have these ready.</h2>
+                                    <div class="sc-detail-list">
+                                        <div class="sc-detail-row">
+                                            <strong>Required</strong>
+                                            <span>Tracking code</span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Required</strong>
+                                            <span>Booking phone number</span>
+                                        </div>
+                                        <div class="sc-detail-row">
+                                            <strong>Response</strong>
+                                            <span>Pending, confirmed, completed, or cancelled</span>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <record id="smart_clinic_website_menu_root" model="website.menu">
+        <field name="name">Smart Clinic</field>
+        <field name="url">/smart-clinic</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" eval="80"/>
+    </record>
+
+    <record id="smart_clinic_website_menu_doctors" model="website.menu">
+        <field name="name">Doctors</field>
+        <field name="url">/smart-clinic/doctors</field>
+        <field name="parent_id" ref="smart_clinic_website_menu_root"/>
+        <field name="sequence" eval="10"/>
+    </record>
+
+    <record id="smart_clinic_website_menu_book" model="website.menu">
+        <field name="name">Book Appointment</field>
+        <field name="url">/smart-clinic/book</field>
+        <field name="parent_id" ref="smart_clinic_website_menu_root"/>
+        <field name="sequence" eval="20"/>
+    </record>
+
+    <record id="smart_clinic_website_menu_status" model="website.menu">
+        <field name="name">Appointment Status</field>
+        <field name="url">/smart-clinic/status</field>
+        <field name="parent_id" ref="smart_clinic_website_menu_root"/>
+        <field name="sequence" eval="30"/>
+    </record>
+
+</odoo>

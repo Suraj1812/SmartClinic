@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.idea/
+.pytest_cache/
+.venv/
+.vscode/
+*.log
+*.pid
+*.pyc
+*.pyo
+__pycache__/
+db_data/
+odoo_data/
+*.sqlite3
